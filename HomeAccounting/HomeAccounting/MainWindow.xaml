@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeAccounting"
         mc:Ignorable="d"
-        Title="Home Accounting" Height="600" Width="800"
+        Title="Home Accounting" Height="600" Width="900"
         Loaded="MyWindow_Loaded">
     <Grid Background="#FF24292E">
         <Grid.ColumnDefinitions>
@@ -16,7 +16,7 @@
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
@@ -27,33 +27,44 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <DataGrid 
+        <DataGrid ColumnWidth="*"
             AutoGenerateColumns="True" 
             Name="dg" 
             HorizontalAlignment="Left" 
-            Height="432" Margin="0,10,0,0" 
-            VerticalAlignment="Top" 
-            Width="558" 
+            Height="432" Margin="0,0,40,58" 
+            VerticalAlignment="Bottom" 
+                  
+            Width="650" 
+                  
             SelectionChanged="dg_SelectionChanged"  
             Grid.Row="1"
-            Grid.Column="2" Grid.ColumnSpan="6" Grid.RowSpan="5"
-            />
-        <CheckBox Content="Расходы" Grid.Column="4" HorizontalAlignment="Left" Margin="24,51,0,0" VerticalAlignment="Top" Foreground="White"/>
+            Grid.Column="2" Grid.ColumnSpan="6" Grid.RowSpan="5" IsReadOnly="True" SelectionMode="Single"/>
+        <CheckBox x:Name="chb_expense" Content="Расходы" Grid.Column="2" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Foreground="White" IsChecked="True" Checked="chb_expense_Checked"/>
 
 
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="41,67,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Дата" VerticalAlignment="Top" Width="120" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
-        <Button Content="Обновить" HorizontalAlignment="Left" Margin="41,27,0,38" Grid.Row="4" Width="120" Grid.ColumnSpan="2" Background="#FF0366D6" BorderBrush="#FF0758B2" Foreground="White" OpacityMask="Black"/>
-        <Button Content="Удалить" HorizontalAlignment="Left" Margin="41,80,0,0" Grid.Row="4" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Background="#FFD22F3C" Foreground="White" BorderBrush="#FF7C3139" Height="32" Grid.RowSpan="2"/>
+        <TextBox x:Name="tb_data" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="34,39,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Дата" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
+        <Button Content="Обновить" HorizontalAlignment="Left" Margin="34,10,0,55" Grid.Row="4" Width="127" Grid.ColumnSpan="2" Background="#FF0366D6" BorderBrush="#FF0758B2" Foreground="White" OpacityMask="Black"/>
+        <Button Content="Удалить" HorizontalAlignment="Left" Margin="34,66,0,0" Grid.Row="4" VerticalAlignment="Top" Width="127" Grid.ColumnSpan="2" Background="#FFD22F3C" Foreground="White" BorderBrush="#FF7C3139" Height="34"/>
 
-        <Button Grid.ColumnSpan="2" Content="Добавить" Grid.Column="6" HorizontalAlignment="Left" Margin="48,45,0,0" VerticalAlignment="Top" Width="110" Height="45" Background="#FF2EC350" BorderBrush="#FF236A37" Foreground="White"/>
-        <Label Content="Доходы/Расходы" Grid.Column="2" HorizontalAlignment="Left" Margin="41,45,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="104" Foreground="White"/>
+        <Button Content="Добавить" Grid.Column="7" HorizontalAlignment="Left" Margin="40,39,0,0" VerticalAlignment="Top" Width="110" Height="45" Background="#FF2EC350" BorderBrush="#FF236A37" Foreground="White"/>
 
-        <Label Content="Данные записи" HorizontalAlignment="Left" Margin="41,19,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="129" IsEnabled="False" Foreground="White" FontSize="16"/>
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="41,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Название" VerticalAlignment="Top" Width="120" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="41,54,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Категория" VerticalAlignment="Top" Width="120" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="41,0,0,0" Grid.Row="3" TextWrapping="Wrap" Text="Сумма" VerticalAlignment="Top" Width="120" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="63" Margin="41,48,0,0" Grid.Row="3" TextWrapping="Wrap" Text="Комментарий" VerticalAlignment="Top" Width="120" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769" Grid.RowSpan="2"/>
-        <CheckBox Content="Доходы" Grid.Column="3" HorizontalAlignment="Left" Margin="45,51,0,0" VerticalAlignment="Top" Foreground="White" Grid.ColumnSpan="2"/>
+        <Label Content="Данные записи" HorizontalAlignment="Left" Margin="41,88,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="129" IsEnabled="False" Foreground="White" FontSize="16" Grid.RowSpan="2"/>
+        <TextBox x:Name="tb_category" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="34,86,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Категория" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769" Grid.RowSpan="2"/>
+        <TextBox x:Name="tb_sum" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="34,67,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Сумма" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
+        <TextBox x:Name="tb_comment" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="63" Margin="34,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="Комментарий" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
+        <CheckBox x:Name="chb_income" Content="Доходы" Grid.Column="2" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Foreground="White" IsChecked="True" Checked="chb_income_Checked"/>
+        <RadioButton x:Name="rb_income" Content="Доход" Grid.Column="1" HorizontalAlignment="Left" Margin="8,34,0,0" Grid.Row="2" VerticalAlignment="Top" Foreground="White" Checked="rb_income_Checked"/>
+        <RadioButton x:Name="rb_expense" Content="Расход" HorizontalAlignment="Left" Margin="34,34,0,0" Grid.Row="2" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.839,0.533" Checked="rb_expense_Checked"/>
+        <Expander Grid.Column="3" Header="Категории" HorizontalAlignment="Left" Height="100" Margin="10,49,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="100" Grid.ColumnSpan="2" Foreground="White">
+            <Grid Background="#FFE5E5E5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40*"/>
+                    <ColumnDefinition Width="9*"/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Expander>
+        <Button Content="Статистика" Grid.Column="5" HorizontalAlignment="Left" Margin="84,39,0,0" VerticalAlignment="Top" Width="116" Height="45" Grid.ColumnSpan="2" Foreground="White" Background="#FF9B9B9F"/>
         <!--<Border BorderBrush="#FF626769" BorderThickness="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="380" Margin="12,10,0,0" Grid.Row="1" Grid.RowSpan="4" VerticalAlignment="Top" Width="178" Background="#FF3F4448">
             </Border>-->
     </Grid>
