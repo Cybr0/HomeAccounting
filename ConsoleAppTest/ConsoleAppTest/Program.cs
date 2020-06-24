@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Npgsql;
+using System.ComponentModel;
+using System.Data;
 
 namespace ConsoleAppTest
 {
+
+    
     class Program
     {
 
@@ -17,7 +21,7 @@ namespace ConsoleAppTest
             string port = "5432";
             string user_id = "postgres";
             string password = "123";
-            string database = "homeaccounting";
+            string database = "homeaccountingtest";
 
             string connection_string = $"Server={server};Port={port};" +
                                  $"User Id={user_id};Password={password};" +
@@ -27,24 +31,42 @@ namespace ConsoleAppTest
             string sql;
             NpgsqlCommand cmd;
 
-           
 
             try
             {
                 connection.Open();
-                sql = @"select * from Categories;";
+                
+                sql = $"select name from homeAccounting.NameCategory;";
                 cmd = new NpgsqlCommand(sql, connection);
                 NpgsqlDataReader reader = cmd.ExecuteReader();
-                reader.Read();
-                Console.WriteLine(reader.GetName(5));
-                Console.WriteLine(reader[5]);
-                //while (reader.Read())
-                //{
-                //    for (int i = 0; i < reader.FieldCount; i++)
-                //    {
-                //        Console.WriteLine(reader.GetName(i) + ": " + reader[i]);
-                //    }
-                //}
+
+
+                // тут узнаю сколько будет колонок в datagrid
+                List<string> colname = new List<string>();
+
+                while (reader.Read())
+                {
+                    colname.Add(reader[0].ToString());
+                }
+
+
+
+                DataTable table = new DataTable();
+                foreach (var item in colname)
+                {
+                    table.Columns.Add(item);
+                }
+
+                foreach (var item in colname)
+                {
+                    table.Rows.Add(item);
+                }
+
+
+                foreach (var item in table.Rows)
+                {
+                    Console.WriteLine(item.ToString());
+                }
 
             }
             catch (Exception e)

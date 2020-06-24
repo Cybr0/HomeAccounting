@@ -1,0 +1,15 @@
+﻿<Window x:Class="HomeAccounting.ha_statistics"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeAccounting"
+        Loaded="ha_statistics_Loaded"
+        mc:Ignorable="d"
+        Title="Статистика по месяцам" Height="450" Width="800">
+    <Grid Background="#FF24292E">
+        <Label FontSize="40" HorizontalAlignment="Center" FontFamily="Verdana" Background="#FF24292E" Foreground="White">Статистика</Label>
+        <DataGrid Name="dg" IsReadOnly="True" AutoGenerateColumns="True"  HorizontalAlignment="Left" Height="299" Margin="61,73,0,0" VerticalAlignment="Top" Width="663"/>
+
+    </Grid>
+</Window>
