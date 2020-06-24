@@ -20,8 +20,14 @@ namespace HomeAccounting
     /// </summary>
     public partial class ha_add_new_entry : Window
     {
-        //
+        //числовое значение Главной категории
         int rb_main_category = 2;
+
+        //индекс для новой категории, если добавлена
+        int newCategory = 0;
+
+
+
         public ha_add_new_entry()
         {
             InitializeComponent();
@@ -50,7 +56,7 @@ namespace HomeAccounting
             // подключение к бд(postgre) start
             string server = "localhost";
             string port = "5432";
-            string user_id = "postgres";
+            string user_id = "homeaccountingUser";
             string password = "123";
             string database = "homeaccountingtest";
             string connection_string = $"Server={server};Port={port};" +
@@ -71,20 +77,21 @@ namespace HomeAccounting
             {
                 connection.Open();
 
-                sql = $"select id, name from homeAccounting.NameCategory;";
+                sql = $"select id, name from homeAccounting.NameCategory order by id;";
                 cmd = new NpgsqlCommand(sql, connection);
                 reader = cmd.ExecuteReader();
 
 
-                // тут загружаю категории в colname
+                // тут загружаю категории в categories
 
                 while (reader.Read())
                 {
                     if (!categories.ContainsKey(reader[1].ToString()))
                     {
                         categories.Add(reader[1].ToString(), reader[0].ToString());
+                        newCategory = Convert.ToInt32((reader[0].ToString()));
                     }
-
+                    newCategory += 1;
                 }        
             }
             catch (Exception ex)
@@ -103,14 +110,14 @@ namespace HomeAccounting
             // тут проверка наличия категории, если нет то добавляем
             if (!(categories.ContainsKey(tb_new_category.Text)))
             {
-                MessageBox.Show(tb_new_category.Text + "start");
+                //MessageBox.Show(tb_new_category.Text + "start");
                 try
                 {
                     connection.Open();
                     sql = $"select * from nameCategory_insert({rb_main_category}, '{tb_new_category.Text}');";
                     NpgsqlCommand cmd2 = new NpgsqlCommand(sql, connection);
                     cmd2.ExecuteNonQuery();
-                    MessageBox.Show(tb_new_category.Text + "end");
+                 //   MessageBox.Show(tb_new_category.Text + "end");
 
                 }
                 catch (Exception ex)
@@ -121,14 +128,18 @@ namespace HomeAccounting
                 finally
                 {
                     connection.Close();
-                    MessageBox.Show(tb_new_category.Text + "end");
+                 //   MessageBox.Show(tb_new_category.Text + "end");
                 }
             }
             try
             {
-                //Console.WriteLine("да есть");
-                //Console.WriteLine(categories[cat]);
-                //Console.WriteLine(categories.Count);
+                
+                //дата по умолчанию
+                if (tb_data.Text == "Дата")
+                {
+                    DateTime currentDate = DateTime.Today;
+                    tb_data.Text = currentDate.Date.ToString("dd-MM-yyyy");
+                }
 
                 connection.Open();
                 if (tb_new_category.Text == "Новая категория")
@@ -139,8 +150,10 @@ namespace HomeAccounting
                 {
                     //название категории в число
                     int tmp = categories.Count + 1;
-                    MessageBox.Show(tmp.ToString());
-                    sql = $"select * from adding_new_date({rb_main_category}, {tmp.ToString()}, to_date('{tb_data.Text}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
+                 //   MessageBox.Show(tmp.ToString());
+                 
+
+                    sql = $"select * from adding_new_date({rb_main_category}, {newCategory.ToString()}, to_date('{tb_data.Text}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
                 }
                 NpgsqlCommand cmd3 = new NpgsqlCommand(sql, connection);
                 cmd3.ExecuteNonQuery();
@@ -154,9 +167,12 @@ namespace HomeAccounting
             finally
             {
                 connection.Close();
+                MessageBox.Show("Запись добавлена");
                 Visibility = Visibility.Collapsed;
             }
-            
+
+
+
         }
 
         private void rb_expense_Checked(object sender, RoutedEventArgs e)

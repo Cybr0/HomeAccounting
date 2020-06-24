@@ -25,7 +25,7 @@ namespace HomeAccounting
             // подключение к бд(postgre) start
             string server = "localhost";
             string port = "5432";
-            string user_id = "postgres";
+            string user_id = "homeaccountingUser";
             string password = "123";
             string database = "homeaccountingtest";
             string connection_string = $"Server={server};Port={port};" +
