@@ -5,18 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeAccounting"
         mc:Ignorable="d"
-        Title="Добавить новую запись." Height="570" Width="200" Closed="Window_Closed">
+        Title="Добавить новую запись." Height="596" Width="200" Closed="Window_Closed">
     <Grid Background="#FF24292E">
         <Label Content="Данные записи" HorizontalAlignment="Left" Margin="30,40,0,0" VerticalAlignment="Top" Width="129" IsEnabled="False" Foreground="White" FontSize="16"/>
         <TextBox x:Name="tb_data" HorizontalAlignment="Left" Height="23" Margin="30,91,0,0" TextWrapping="Wrap" Text="Дата" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
         <RadioButton Checked="rb_expense_Checked" x:Name="rb_expense" Content="Расход" HorizontalAlignment="Left" Margin="30,132,0,0" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.839,0.533" Cursor="Hand" IsChecked="True"/>
-        <RadioButton Checked="rb_income_Checked" x:Name="rb_income" Content="Доход" HorizontalAlignment="Left" Margin="106,135,0,0" VerticalAlignment="Top" Foreground="White" Cursor="Hand"/>
-        <TextBox x:Name="tb_sum" HorizontalAlignment="Left" Height="23" Margin="30,231,0,0" TextWrapping="Wrap" Text="Сумма" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
-        <TextBox x:Name="tb_comment" HorizontalAlignment="Left" Height="63" Margin="30,285,0,0" TextWrapping="Wrap" Text="Комментарий" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
-        <Button Name="btnAdd" Content="Добавить" HorizontalAlignment="Left" Margin="30,382,0,0" VerticalAlignment="Top" Width="127" Height="45" Background="#FF2EC350" BorderBrush="#FF236A37" Foreground="White" Click="btnAdd_Click" />
-        <Button Name="btnEsc"  Content="Отмена" HorizontalAlignment="Left" Margin="30,456,0,0" VerticalAlignment="Top" Width="127" Height="41" Foreground="White" Background="#FF9B9B9F" Click="Close_window_Button_Click"/>
-        <ComboBox HorizontalAlignment="Left" Margin="30,189,0,0" VerticalAlignment="Top" Width="127"/>
-        <TextBlock HorizontalAlignment="Left" Margin="65,168,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Background="#FF616161"/>
+        <RadioButton Checked="rb_income_Checked" x:Name="rb_income" Content="Доход" HorizontalAlignment="Left" Margin="104,132,0,0" VerticalAlignment="Top" Foreground="White" Cursor="Hand" RenderTransformOrigin="0.528,0.2"/>
+        <TextBox x:Name="tb_sum" HorizontalAlignment="Left" Height="23" Margin="30,279,0,0" TextWrapping="Wrap" Text="Сумма" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
+        <TextBox x:Name="tb_comment" HorizontalAlignment="Left" Height="63" Margin="30,323,0,0" TextWrapping="Wrap" Text="Комментарий" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
+        <Button Name="btnAdd" Content="Добавить" HorizontalAlignment="Left" Margin="30,416,0,0" VerticalAlignment="Top" Width="127" Height="45" Background="#FF2EC350" BorderBrush="#FF236A37" Foreground="White" Click="btnAdd_Click" />
+        <Button Name="btnEsc"  Content="Отмена" HorizontalAlignment="Left" Margin="30,490,0,0" VerticalAlignment="Top" Width="127" Height="41" Foreground="White" Background="#FF9B9B9F" Click="Close_window_Button_Click"/>
+        <ComboBox Name="tb_category" ItemsSource="{Binding CategoryNameCollection}" HorizontalAlignment="Left" Margin="30,189,0,340" Width="127" DropDownClosed="tb_category_DropDownClosed"/>
+        <TextBlock HorizontalAlignment="Left" Margin="65,168,0,0" TextWrapping="Wrap" Text="Категории" VerticalAlignment="Top" Background="#FF24292E" Foreground="White"/>
+        <TextBox IsReadOnly="True" x:Name="tb_new_category" HorizontalAlignment="Left" Height="23" Margin="30,241,0,0" TextWrapping="Wrap" Text="Новая категория" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
 
     </Grid>
 </Window>

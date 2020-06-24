@@ -102,6 +102,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ComboBoxViewModel.cs" />
     <Compile Include="ha_add_new_entry.xaml.cs">
       <DependentUpon>ha_add_new_entry.xaml</DependentUpon>
     </Compile>

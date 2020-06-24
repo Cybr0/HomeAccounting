@@ -20,10 +20,12 @@ namespace HomeAccounting
     /// </summary>
     public partial class ha_add_new_entry : Window
     {
+        //
         int rb_main_category = 2;
         public ha_add_new_entry()
         {
             InitializeComponent();
+            DataContext = new ComboBoxViewModel();
         }
 
         public void SetContent(string content)
@@ -64,6 +66,7 @@ namespace HomeAccounting
 
             //тут получаю данные для поля категории
             Dictionary<string, string> categories = new Dictionary<string, string>();
+
             try
             {
                 connection.Open();
@@ -82,19 +85,11 @@ namespace HomeAccounting
                         categories.Add(reader[1].ToString(), reader[0].ToString());
                     }
 
-                }
-
-                foreach (var item in categories)
-                {
-                    Console.WriteLine(item.Key + "  " + item.Value);
-                }
-
-
-
+                }        
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(ex.Message);
 
             }
             finally
@@ -102,33 +97,66 @@ namespace HomeAccounting
                 connection.Close();
             }
 
+
+
+
             // тут проверка наличия категории, если нет то добавляем
-            if (categories.ContainsKey(tb_category.Text))
+            if (!(categories.ContainsKey(tb_new_category.Text)))
             {
-                Console.WriteLine("да есть");
-                Console.WriteLine(categories[cat]);
-            }
-            else
-            {
+                MessageBox.Show(tb_new_category.Text + "start");
                 try
                 {
-                    Console.WriteLine(categories.Count);
                     connection.Open();
-                    sql = $"select * from nameCategory_insert({rb_main_category}, '{cat}');";
+                    sql = $"select * from nameCategory_insert({rb_main_category}, '{tb_new_category.Text}');";
                     NpgsqlCommand cmd2 = new NpgsqlCommand(sql, connection);
                     cmd2.ExecuteNonQuery();
+                    MessageBox.Show(tb_new_category.Text + "end");
 
                 }
                 catch (Exception ex)
                 {
 
-                    Console.WriteLine(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
                 finally
                 {
                     connection.Close();
+                    MessageBox.Show(tb_new_category.Text + "end");
                 }
             }
+            try
+            {
+                //Console.WriteLine("да есть");
+                //Console.WriteLine(categories[cat]);
+                //Console.WriteLine(categories.Count);
+
+                connection.Open();
+                if (tb_new_category.Text == "Новая категория")
+                {
+                    sql = $"select * from adding_new_date({rb_main_category}, {categories[tb_category.Text]}, to_date('{tb_data.Text}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
+                }
+                else
+                {
+                    //название категории в число
+                    int tmp = categories.Count + 1;
+                    MessageBox.Show(tmp.ToString());
+                    sql = $"select * from adding_new_date({rb_main_category}, {tmp.ToString()}, to_date('{tb_data.Text}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
+                }
+                NpgsqlCommand cmd3 = new NpgsqlCommand(sql, connection);
+                cmd3.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+                Visibility = Visibility.Collapsed;
+            }
+            
         }
 
         private void rb_expense_Checked(object sender, RoutedEventArgs e)
@@ -138,6 +166,20 @@ namespace HomeAccounting
         private void rb_income_Checked(object sender, RoutedEventArgs e)
         {
             rb_main_category = 1;
+        }
+
+
+        private void tb_category_DropDownClosed(object sender, EventArgs e)
+        {
+            if (tb_category.Text == "Другое" || tb_category.Text == "Новая категория")
+            {
+                tb_new_category.IsReadOnly = false;
+            }
+            else
+            {
+                tb_new_category.Text = "Новая категория";
+                tb_new_category.IsReadOnly = true;
+            }
         }
     }
 }
