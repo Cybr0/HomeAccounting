@@ -11,6 +11,7 @@ namespace HomeAccounting
     {
         public Dictionary<string, string> categoryNameForComboBox;
         public List<string> CategoryNameCollection { get; set; }
+        
         public ComboBoxViewModel()
         {
             CategoryNameCollection = new List<string>();
@@ -18,7 +19,7 @@ namespace HomeAccounting
             foreach (var item in categoryNameForComboBox)
             {
                 CategoryNameCollection.Add(item.Key);
-            } 
+            }
         }
         private void InitializerMethod()
         {
@@ -73,5 +74,6 @@ namespace HomeAccounting
                 connection.Close();
             }
         }
+
     }
 }

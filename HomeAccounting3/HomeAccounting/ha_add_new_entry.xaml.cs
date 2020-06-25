@@ -50,7 +50,10 @@ namespace HomeAccounting
             Visibility = Visibility.Collapsed;
         }
 
-        //TODO
+
+
+
+        //Adding data menu. Button "Add"
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             // подключение к бд(postgre) start
@@ -141,6 +144,31 @@ namespace HomeAccounting
                     tb_data.Text = currentDate.Date.ToString("dd-MM-yyyy");
                 }
 
+
+
+                //проверка Суммы на корректность
+                if(tb_sum.Text == "" || tb_sum.Text == "Сумма")
+                {
+                    tb_sum.Text = "0";
+                }
+                else if (rb_main_category == 2 && !(tb_sum.Text.StartsWith("-")))
+                {
+                    string tmpSum = "-" + tb_sum.Text;
+                    tb_sum.Text = tmpSum;
+
+                }
+
+
+                //проверка Комментария по умолчанию
+                if (tb_comment.Text == "Комментарий")
+                {
+                    tb_comment.Text = "";
+                }
+
+
+                
+
+
                 connection.Open();
                 if (tb_new_category.Text == "Новая категория")
                 {
@@ -174,7 +202,13 @@ namespace HomeAccounting
 
 
         }
+        //-------------------------------------------------//
 
+
+
+
+
+        //Adding data menu. RadioButtons "main category"
         private void rb_expense_Checked(object sender, RoutedEventArgs e)
         {
             rb_main_category = 2;
@@ -183,8 +217,10 @@ namespace HomeAccounting
         {
             rb_main_category = 1;
         }
+        //-------------------------------------------------//
 
 
+        //Adding data menu. Textbox "second category"
         private void tb_category_DropDownClosed(object sender, EventArgs e)
         {
             if (tb_category.Text == "Другое" || tb_category.Text == "Новая категория")
@@ -197,5 +233,75 @@ namespace HomeAccounting
                 tb_new_category.IsReadOnly = true;
             }
         }
+        //-------------------------------------------------//
+
+
+        //Adding data menu. Textbox "sum"
+        private void tb_sum_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(tb_sum.Text == "Сумма")
+            {
+                tb_sum.Text = "";
+            }
+        }
+        private void tb_sum_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (tb_sum.Text == "")
+            {
+                tb_sum.Text = "Сумма";
+            }
+        }
+        //-------------------------------------------------//
+
+
+
+        //Adding data menu. Textbox "comment"
+        private void tb_comment_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tb_comment.Text == "Комментарий")
+            {
+                tb_comment.Text = "";
+            }
+        }
+        private void tb_comment_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (tb_comment.Text == "")
+            {
+                tb_comment.Text = "Комментарий";
+            }
+        }
+        //-------------------------------------------------//
+
+
+
+
+        //Adding data menu. Textbox "new category"
+        private void tb_new_category_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (tb_new_category.Text == "Новая категория")
+            {
+                if(tb_category.Text == "Другое" || tb_category.Text == "Новая категория")
+                {
+                    tb_new_category.Text = "";
+                }
+            }
+        }
+
+        private void tb_new_category_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (tb_new_category.Text == "")
+            {
+                if (tb_category.Text == "Другое" || tb_category.Text == "Новая категория")
+                {
+                    tb_new_category.Text = "Новая категория";
+                }
+            }
+        }
+
+
+        //-------------------------------------------------//
+
+
+
     }
 }

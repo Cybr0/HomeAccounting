@@ -46,6 +46,7 @@ namespace HomeAccounting
                                  $"User Id={user_id};Password={password};" +
                                  $"Database={database};";
             InitializeComponent();
+            DataContext = new ComboBoxViewModel();
         }
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -249,10 +250,20 @@ namespace HomeAccounting
                 NpgsqlCommand cmdTmp;
 
                 //проверка колонки деньги на минус
-                //check_money_collunm_to_sign();
+                //проверка Суммы на корректность
+                if (tb_sum.Text == "" || tb_sum.Text == "Сумма")
+                {
+                    tb_sum.Text = "0";
+                }
+                else if (rb_expense_income_check == 2 && !(tb_sum.Text.StartsWith("-")))
+                {
+                    string tmpSum = "-" + tb_sum.Text;
+                    tb_sum.Text = tmpSum;
+
+                }
 
 
-                    string sql = $"update homeAccounting.Entry set main_category = {rb_expense_income_check.ToString()}, name_category = {categories[tb_category.Text]}, date = to_date('{tb_data.Text}', 'dd-mm-yyyy'), cost = {tb_sum.Text}, comment = '{tb_comment.Text}' where id = {row["id"].ToString()};";
+                string sql = $"update homeAccounting.Entry set main_category = {rb_expense_income_check.ToString()}, name_category = {categories[tb_category.Text]}, date = to_date('{tb_data.Text}', 'dd-mm-yyyy'), cost = {tb_sum.Text}, comment = '{tb_comment.Text}' where id = {row["id"].ToString()};";
                 cmdTmp = new NpgsqlCommand(sql, connection);
                 cmdTmp.ExecuteNonQuery();
             }
@@ -270,21 +281,6 @@ namespace HomeAccounting
 
         }
 
-        //проверка колонки на минус
-        private void check_money_collunm_to_sign()
-        {
-            //проверка колонки на минус
-            if (tb_sum.Text.StartsWith("-") && rb_expense_income_check == 1)
-            {
-                string tmp = "-" + tb_sum.Text;
-                tb_sum.Text = tmp;
-            }
-            else if (!(tb_sum.Text.StartsWith("-")) && rb_expense_income_check == 2)
-            {
-                string tmp =  tb_sum.Text.Substring(1);
-                tb_sum.Text = tmp;
-            }
-        }
         
 
         private void rb_expense_Checked(object sender, RoutedEventArgs e)

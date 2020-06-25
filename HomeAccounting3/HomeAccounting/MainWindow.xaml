@@ -48,11 +48,12 @@
         <Button Content="Добавить" Grid.Column="7" HorizontalAlignment="Left" Margin="40,39,0,0" VerticalAlignment="Top" Width="110" Height="45" Background="#FF2EC350" BorderBrush="#FF236A37" Foreground="White" Click="Button_Click_1"/>
 
         <Label Content="Данные записи" HorizontalAlignment="Left" Margin="41,88,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="129" IsEnabled="False" Foreground="White" FontSize="16" Grid.RowSpan="2"/>
-        <TextBox x:Name="tb_category" IsReadOnly="True" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="34,86,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Категория" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769" Grid.RowSpan="2" Cursor="Hand"/>
+        <ComboBox Name="tb_category" ItemsSource="{Binding CategoryNameCollection}" HorizontalAlignment="Left" Margin="34,19,0,55" Width="127" Grid.ColumnSpan="2" Grid.Row="2" RenderTransformOrigin="0.622,0.565"/>
+
         <TextBox x:Name="tb_sum" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="34,67,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Сумма" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
         <TextBox x:Name="tb_comment" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="63" Margin="34,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="Комментарий" VerticalAlignment="Top" Width="127" Background="#FF3F4448" Foreground="#FF8D9092" SelectionBrush="#FF626769"/>
-        <RadioButton x:Name="rb_income" Content="Доход" Grid.Column="1" HorizontalAlignment="Left" Margin="8,34,0,0" Grid.Row="2" VerticalAlignment="Top" Foreground="White" Checked="rb_income_Checked"/>
-        <RadioButton x:Name="rb_expense" Content="Расход" HorizontalAlignment="Left" Margin="34,34,0,0" Grid.Row="2" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.839,0.533" Checked="rb_expense_Checked"/>
+        <RadioButton x:Name="rb_income" Content="Доход" Grid.Column="1" HorizontalAlignment="Left" Margin="8,88,0,0" Grid.Row="1" VerticalAlignment="Top" Foreground="White" Checked="rb_income_Checked" Grid.RowSpan="2"/>
+        <RadioButton x:Name="rb_expense" Content="Расход" HorizontalAlignment="Left" Margin="34,88,0,0" Grid.Row="1" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.839,0.533" Checked="rb_expense_Checked" Grid.RowSpan="2"/>
         <Button Content="Статистика" Grid.Column="5" HorizontalAlignment="Left" Margin="84,39,0,0" VerticalAlignment="Top" Width="116" Height="45" Grid.ColumnSpan="2" Foreground="White" Background="#FF9B9B9F" Click="Button_Click"/>
         <Label Content="Бугалтерия" FontSize="30" FontFamily="Verdana" Foreground="White" Grid.Column="1" HorizontalAlignment="Left" Margin="27,20,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Width="218" Height="45"/>
         <Button Content="Обновить данные" Grid.Column="2" HorizontalAlignment="Left" Margin="0,85,0,0" VerticalAlignment="Top" Width="110" Grid.RowSpan="2" Background="#FF767676" BorderBrush="#FFABADB3" Foreground="White" Grid.ColumnSpan="2" Click="reload_Data_Button_Click"/>
