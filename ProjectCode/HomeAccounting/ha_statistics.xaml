@@ -10,6 +10,9 @@
     <Grid Background="#FF24292E">
         <Label FontSize="40" HorizontalAlignment="Center" FontFamily="Verdana" Background="#FF24292E" Foreground="White">Статистика</Label>
         <DataGrid Name="dg" IsReadOnly="True" AutoGenerateColumns="True"  HorizontalAlignment="Left" Height="299" Margin="61,73,0,0" VerticalAlignment="Top" Width="663"/>
+        <TextBox Name="tb_selected_year" HorizontalAlignment="Left" Height="23" Margin="93,48,0,0" TextWrapping="Wrap" Text="2020" VerticalAlignment="Top" Width="37" Background="#FF5D5C5C" BorderBrush="#FFC1C1C1" Foreground="White" PreviewMouseDown="tb_selected_year_PreviewMouseDown" PreviewLostKeyboardFocus="tb_selected_year_PreviewLostKeyboardFocus" PreviewTextInput="tb_selected_year_PreviewTextInput"/>
+        <Label Content="Год:" HorizontalAlignment="Left" Margin="61,45,0,0" VerticalAlignment="Top" Foreground="#FFFDFDFD"/>
+        <Button Content="Обновить данные" HorizontalAlignment="Left" Margin="135,48,0,0" VerticalAlignment="Top" Width="110" Background="#FF767676" BorderBrush="#FFABADB3" Foreground="White" Click="reload_Data_Button_Click" Height="23"/>
 
     </Grid>
 </Window>

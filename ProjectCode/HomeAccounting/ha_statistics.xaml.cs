@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace HomeAccounting
 {
@@ -134,23 +135,41 @@ namespace HomeAccounting
             }
 
 
-            // тут добавляю остальную значения по категориям из бд
-            for (int i = 0; i < monthCount; i++)
+            //cheack year date
+            if(tb_selected_year.Text == ""  || tb_selected_year.Text.Length != 4)
             {
-                connection.Open();
-                sql = $"select * from test_select({i + 1},2020);";
-                cmd = new NpgsqlCommand(sql, connection);
-                reader = cmd.ExecuteReader();
-
-
-                while (reader.Read())
-                {
-                    //i-1 потому, что отчет с нуля
-
-                    pairsRowMonthsInfo[i][reader[0].ToString()] = reader[1].ToString();
-                }
-                connection.Close();
+                tb_selected_year.Text = "2020";
             }
+
+
+
+
+            // тут добавляю остальную значения по категориям из бд
+            try
+            {
+                for (int i = 0; i < monthCount; i++)
+                {
+                    connection.Open();
+                    sql = $"select * from test_select({i + 1},{tb_selected_year.Text});";
+                    cmd = new NpgsqlCommand(sql, connection);
+                    reader = cmd.ExecuteReader();
+
+
+                    while (reader.Read())
+                    {
+                        //i-1 потому, что отчет с нуля
+
+                        pairsRowMonthsInfo[i][reader[0].ToString()] = reader[1].ToString();
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
+            
 
 
             // тут уже добавляю в table строки
@@ -175,7 +194,7 @@ namespace HomeAccounting
             // загружаю все в DataGrid
             dg.ItemsSource = table.DefaultView;
 
-            connection.Close();
+            //connection.Close();
 
         }
 
@@ -187,6 +206,30 @@ namespace HomeAccounting
         private void Window_Closed(object sender, EventArgs e)
         {
             (Application.Current as App).Statistics.Remove(this);
+        }
+
+
+        private void tb_selected_year_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            tb_selected_year.Text = "";
+        }
+
+        private void tb_selected_year_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            //tb_selected_year.Text = "2020";
+            Select();
+        }
+
+        private void reload_Data_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Select();
+        }
+
+        //NumberValidationTextBox
+        private void tb_selected_year_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+                Regex regex = new Regex("[^0-9]+");
+                e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

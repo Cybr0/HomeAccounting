@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace HomeAccounting
 {
@@ -30,7 +31,7 @@ namespace HomeAccounting
         private string sql;
         private NpgsqlCommand cmd;
         private DataTable dt;
-
+        
 
 
 
@@ -46,6 +47,7 @@ namespace HomeAccounting
                                  $"User Id={user_id};Password={password};" +
                                  $"Database={database};";
             InitializeComponent();
+            tb_data.SelectedDate = DateTime.Today;
             DataContext = new ComboBoxViewModel();
         }
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
@@ -130,7 +132,8 @@ namespace HomeAccounting
         private void dg_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             System.Data.DataRowView row = (System.Data.DataRowView)dg.SelectedItems[0];
-            tb_data.Text = (string)row["Дата"];
+            tb_data.SelectedDate = DateTime.Parse((string)row["Дата"]);
+            tb_data.DisplayDate = DateTime.Parse((string)row["Дата"]);
             tb_category.Text = (string)row["Категория"];
             string rb_check_income_or_expense = (string)row["Основная категория"];
             if (rb_check_income_or_expense == "Доход")
@@ -261,9 +264,13 @@ namespace HomeAccounting
                     tb_sum.Text = tmpSum;
 
                 }
+                else if (rb_expense_income_check == 1 && tb_sum.Text.StartsWith("-"))
+                {
+                    string tmpSum = tb_sum.Text.Substring(1);
+                    tb_sum.Text = tmpSum;
+                }
 
-
-                string sql = $"update homeAccounting.Entry set main_category = {rb_expense_income_check.ToString()}, name_category = {categories[tb_category.Text]}, date = to_date('{tb_data.Text}', 'dd-mm-yyyy'), cost = {tb_sum.Text}, comment = '{tb_comment.Text}' where id = {row["id"].ToString()};";
+                string sql = $"update homeAccounting.Entry set main_category = {rb_expense_income_check.ToString()}, name_category = {categories[tb_category.Text]}, date = to_date('{tb_data.SelectedDate}', 'dd-mm-yyyy'), cost = {tb_sum.Text}, comment = '{tb_comment.Text}' where id = {row["id"].ToString()};";
                 cmdTmp = new NpgsqlCommand(sql, connection);
                 cmdTmp.ExecuteNonQuery();
             }
@@ -296,6 +303,13 @@ namespace HomeAccounting
         private void reload_Data_Button_Click(object sender, RoutedEventArgs e)
         {
             Select();
+        }
+
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace HomeAccounting
 {
@@ -32,6 +33,7 @@ namespace HomeAccounting
         {
             InitializeComponent();
             DataContext = new ComboBoxViewModel();
+            tb_data.SelectedDate = DateTime.Today;
         }
 
         public void SetContent(string content)
@@ -137,12 +139,12 @@ namespace HomeAccounting
             try
             {
                 
-                //дата по умолчанию
-                if (tb_data.Text == "Дата")
-                {
-                    DateTime currentDate = DateTime.Today;
-                    tb_data.Text = currentDate.Date.ToString("dd-MM-yyyy");
-                }
+                ////дата по умолчанию
+                //if (tb_data.Text == "Дата")
+                //{
+                //    DateTime currentDate = DateTime.Today;
+                //    tb_data.Text = currentDate.Date.ToString("dd-MM-yyyy");
+                //}
 
 
 
@@ -172,7 +174,7 @@ namespace HomeAccounting
                 connection.Open();
                 if (tb_new_category.Text == "Новая категория")
                 {
-                    sql = $"select * from adding_new_date({rb_main_category}, {categories[tb_category.Text]}, to_date('{tb_data.Text}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
+                    sql = $"select * from adding_new_date({rb_main_category}, {categories[tb_category.Text]}, to_date('{tb_data.SelectedDate.ToString()}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
                 }
                 else
                 {
@@ -181,7 +183,7 @@ namespace HomeAccounting
                  //   MessageBox.Show(tmp.ToString());
                  
 
-                    sql = $"select * from adding_new_date({rb_main_category}, {newCategory.ToString()}, to_date('{tb_data.Text}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
+                    sql = $"select * from adding_new_date({rb_main_category}, {newCategory.ToString()}, to_date('{tb_data.SelectedDate.ToString()}','dd-mm-yyyy'), {tb_sum.Text}, '{tb_comment.Text}');";
                 }
                 NpgsqlCommand cmd3 = new NpgsqlCommand(sql, connection);
                 cmd3.ExecuteNonQuery();
@@ -250,6 +252,11 @@ namespace HomeAccounting
             {
                 tb_sum.Text = "Сумма";
             }
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
         //-------------------------------------------------//
 
