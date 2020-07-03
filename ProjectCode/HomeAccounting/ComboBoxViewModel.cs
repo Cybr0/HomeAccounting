@@ -10,17 +10,40 @@ namespace HomeAccounting
     class ComboBoxViewModel
     {
         public Dictionary<string, string> categoryNameForComboBox;
+        public Dictionary<string, string> incomeCategoryNameForComboBox;
+        public Dictionary<string, string> expenseCategoryNameForComboBox;
         public List<string> CategoryNameCollection { get; set; }
+        public List<string> IncomeCategoryNameCollection { get; set; }
+        public List<string> ExpenseCategoryNameCollection { get; set; }
         
         public ComboBoxViewModel()
         {
+            incomeCategoryNameForComboBox = new Dictionary<string, string>();
+            expenseCategoryNameForComboBox = new Dictionary<string, string>();
             CategoryNameCollection = new List<string>();
+            IncomeCategoryNameCollection = new List<string>();
+            ExpenseCategoryNameCollection = new List<string>();
             InitializerMethod();
+
             foreach (var item in categoryNameForComboBox)
             {
                 CategoryNameCollection.Add(item.Key);
             }
+
+            IncomeCategoryNameCollection.Add("Другое");
+            foreach (var item in incomeCategoryNameForComboBox)
+            {
+                IncomeCategoryNameCollection.Add(item.Key);
+            }
+            
+
+            foreach (var item in expenseCategoryNameForComboBox)
+            {
+                ExpenseCategoryNameCollection.Add(item.Key);
+            }
+
         }
+        
         private void InitializerMethod()
         {
             // подключение к бд(postgre) start
@@ -47,7 +70,7 @@ namespace HomeAccounting
             {
                 connection.Open();
 
-                sql = $"select id, name from homeAccounting.NameCategory;";
+                sql = $"select id, name, main_category from homeAccounting.NameCategory;";
                 cmd = new NpgsqlCommand(sql, connection);
                 reader = cmd.ExecuteReader();
 
@@ -59,6 +82,16 @@ namespace HomeAccounting
                     if (!categories.ContainsKey(reader[1].ToString()))
                     {
                         categories.Add(reader[1].ToString(), reader[0].ToString());
+                        //проверка катерогии на доходы
+                        if (reader[2].ToString() == "1")
+                        {
+                            incomeCategoryNameForComboBox.Add(reader[1].ToString(), reader[0].ToString());
+                        }
+                        //иначе катерогия расходы
+                        else
+                        {
+                            expenseCategoryNameForComboBox.Add(reader[1].ToString(), reader[0].ToString());
+                        }
                     }
 
                 }

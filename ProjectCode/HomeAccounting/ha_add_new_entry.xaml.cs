@@ -28,10 +28,15 @@ namespace HomeAccounting
         int newCategory = 0;
 
 
+        //проверка на первую загрузку окна добавить
+        bool rb_expense_Checked_first_load = false;
+
+        ComboBoxViewModel model = new ComboBoxViewModel();
 
         public ha_add_new_entry()
         {
             InitializeComponent();
+            
             DataContext = new ComboBoxViewModel();
             tb_data.SelectedDate = DateTime.Today;
         }
@@ -214,11 +219,38 @@ namespace HomeAccounting
         private void rb_expense_Checked(object sender, RoutedEventArgs e)
         {
             rb_main_category = 2;
+            
+            if (rb_expense_Checked_first_load)
+            {
+                tb_category.ItemsSource = model.ExpenseCategoryNameCollection;
+            }
+            rb_expense_Checked_first_load = true;
+
+            //tb_category.Text = "Другое";
+            
         }
         private void rb_income_Checked(object sender, RoutedEventArgs e)
         {
             rb_main_category = 1;
+            tb_category.ItemsSource = model.IncomeCategoryNameCollection;
         }
+
+
+        //change category selectedItem
+        private void rb_expense_Click(object sender, RoutedEventArgs e)
+        {
+            rb_main_category = 2;
+            tb_category.SelectedItem = "Другое";
+            tb_category.Text = "Другое";
+        }
+
+        private void rb_income_Click(object sender, RoutedEventArgs e)
+        {
+            rb_main_category = 1;
+            tb_category.SelectedItem = "Другое";
+            tb_category.Text = "Другое";
+        }
+
         //-------------------------------------------------//
 
 
@@ -304,6 +336,8 @@ namespace HomeAccounting
                 }
             }
         }
+
+        
 
 
         //-------------------------------------------------//

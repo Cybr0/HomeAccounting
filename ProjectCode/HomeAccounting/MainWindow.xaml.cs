@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Windows.Controls.Primitives;
 
 namespace HomeAccounting
 {
@@ -24,6 +25,7 @@ namespace HomeAccounting
     public partial class MainWindow : Window
     {
         int rb_expense_income_check = 2;
+        ComboBoxViewModel model;
 
 
         private string connection_string;
@@ -31,7 +33,7 @@ namespace HomeAccounting
         private string sql;
         private NpgsqlCommand cmd;
         private DataTable dt;
-        
+        private int selectedRowId;
 
 
 
@@ -47,7 +49,10 @@ namespace HomeAccounting
                                  $"User Id={user_id};Password={password};" +
                                  $"Database={database};";
             InitializeComponent();
+
             tb_data.SelectedDate = DateTime.Today;
+
+            model = new ComboBoxViewModel();
             DataContext = new ComboBoxViewModel();
         }
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
@@ -58,10 +63,12 @@ namespace HomeAccounting
 
         private void Select()
         {
+            model = new ComboBoxViewModel();
+
             try
             {
                 connection.Open();
-                sql = "select to_char(Дата,'dd-mm-yyyy') as \"Дата\", \"Основная категория\", Категория,  Стоимость, Комментарий, id from mainSelect()";
+                sql = "select to_char(Дата,'dd-mm-yyyy') as \"Дата\", \"Основная категория\", Категория, Стоимость, Комментарий, id from mainSelect()";
                 cmd = new NpgsqlCommand(sql, connection);
                 cmd.ExecuteNonQuery();
 
@@ -70,7 +77,6 @@ namespace HomeAccounting
                 dt = new DataTable("mainSelect()");
                 dataAdapter.Fill(dt);
                 dg.ItemsSource = dt.DefaultView;
-
                 connection.Close();
 
 
@@ -84,57 +90,16 @@ namespace HomeAccounting
         }
 
         
-        private void Select_test_tmp()
-        {
-            /*
-            try
-            {
-                connection = new NpgsqlConnection(connection_string);
-                connection.Open();
-                sql = "select id, \"Основная категория\", Категория, to_char(Дата,'dd-mm-yyyy') as \"Дата\", Стоимость, Комментарий from mainSelect()";
-
-                if (chb_income.IsChecked == true && chb_expense.IsChecked == true)
-                {
-                    sql = "select id, \"Основная категория\", Категория, to_char(Дата,'dd-mm-yyyy') as \"Дата\", Стоимость, Комментарий from mainSelect()";
-                }
-                else if (chb_income.IsChecked == true && chb_expense.IsChecked == false)
-                {
-                    sql = "select id, \"Основная категория\", Категория, to_char(Дата,'dd-mm-yyyy') as \"Дата\", Стоимость, Комментарий from mainSelect() where main_category = 1";
-                }
-                else if (chb_expense.IsChecked == true && chb_income.IsChecked == false)
-                {
-                    sql = "select id, \"Основная категория\", Категория, to_char(Дата,'dd-mm-yyyy') as \"Дата\", Стоимость, Комментарий from mainSelect() where main_category = 2";
-                }
-
-                cmd = new NpgsqlCommand(sql, connection);
-                cmd.ExecuteNonQuery();
-
-                NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(cmd);
-
-                dt = new DataTable("Categories");
-                dataAdapter.Fill(dt);
-                dg.ItemsSource = dt.DefaultView;
-
-                connection.Close();
-
-
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message);
-                connection.Close();
-            }
-            
-            */
-        }
+        
 
         private void dg_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             System.Data.DataRowView row = (System.Data.DataRowView)dg.SelectedItems[0];
+            selectedRowId = (int)row["id"];
             tb_data.SelectedDate = DateTime.Parse((string)row["Дата"]);
             tb_data.DisplayDate = DateTime.Parse((string)row["Дата"]);
             tb_category.Text = (string)row["Категория"];
+            tb_category.SelectedItem = (string)row["Категория"];
             string rb_check_income_or_expense = (string)row["Основная категория"];
             if (rb_check_income_or_expense == "Доход")
             {
@@ -150,15 +115,6 @@ namespace HomeAccounting
             tb_comment.Text = (string)row["Комментарий"];
         }
 
-        private void chb_income_Checked(object sender, RoutedEventArgs e)
-        {
-            //Select_test_tmp();
-        }
-
-        private void chb_expense_Checked(object sender, RoutedEventArgs e)
-        {
-            //Select_test_tmp();
-        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -183,24 +139,33 @@ namespace HomeAccounting
 
             try
             {
-                System.Data.DataRowView row = (System.Data.DataRowView)dg.SelectedItems[0];
+                //System.Data.DataRowView row = (System.Data.DataRowView)dg.SelectedItems[0];
 
                 connection.Open();
                 NpgsqlCommand cmdTmp;
-                string sql = $"delete from homeAccounting.Entry where id = {row["id"].ToString()}";
+                string sql = $"delete from homeAccounting.Entry where id = {selectedRowId.ToString()}";
                 cmdTmp = new NpgsqlCommand(sql, connection);
                 cmdTmp.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
 
             }
             finally
             {
                 connection.Close();
             }
-            MessageBox.Show("Запись удалена");
+
+            if(selectedRowId == 0)
+            {
+                MessageBox.Show("Вы не выбрали запись.");
+            }
+            else
+            {
+                MessageBox.Show("Запись удалена");
+            }
+            
             Select();
 
         }
@@ -247,7 +212,7 @@ namespace HomeAccounting
 
             try
             {
-                System.Data.DataRowView row = (System.Data.DataRowView)dg.SelectedItems[0];
+                //System.Data.DataRowView row = (System.Data.DataRowView)dg.SelectedItems[0];
 
                 connection.Open();
                 NpgsqlCommand cmdTmp;
@@ -270,20 +235,29 @@ namespace HomeAccounting
                     tb_sum.Text = tmpSum;
                 }
 
-                string sql = $"update homeAccounting.Entry set main_category = {rb_expense_income_check.ToString()}, name_category = {categories[tb_category.Text]}, date = to_date('{tb_data.SelectedDate}', 'dd-mm-yyyy'), cost = {tb_sum.Text}, comment = '{tb_comment.Text}' where id = {row["id"].ToString()};";
+                string sql = $"update homeAccounting.Entry set main_category = {rb_expense_income_check.ToString()}, name_category = {categories[tb_category.Text]}, date = to_date('{tb_data.SelectedDate}', 'dd-mm-yyyy'), cost = {tb_sum.Text}, comment = '{tb_comment.Text}' where id = {selectedRowId.ToString()};";
                 cmdTmp = new NpgsqlCommand(sql, connection);
                 cmdTmp.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                
+                //MessageBox.Show(ex.Message);
 
             }
             finally
             {
                 connection.Close();
             }
-            MessageBox.Show("Запись Обновлена");
+
+            if(selectedRowId == 0)
+            {
+                MessageBox.Show("Вы не выбрали запись.");
+            }
+            else
+            {
+                MessageBox.Show("Запись Обновлена");
+            }
             Select();
 
         }
@@ -310,6 +284,35 @@ namespace HomeAccounting
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void rb_expense_Checked_1(object sender, RoutedEventArgs e)
+        {
+            //tb_category.SetBinding(Selector.SelectedItemProperty,
+            //  new Binding("ExpenseCategoryNameCollection") { Source = new ComboBoxViewModel().ExpenseCategoryNameCollection });
+            tb_category.ItemsSource = model.ExpenseCategoryNameCollection;
+        }
+
+        private void rb_income_Checked_1(object sender, RoutedEventArgs e)
+        {
+            //tb_category.SetBinding(Selector.SelectedItemProperty,
+            //  new Binding("IncomeCategoryNameCollection") { Source = new ComboBoxViewModel().incomeCategoryNameForComboBox });
+
+            tb_category.ItemsSource = model.IncomeCategoryNameCollection;
+        }
+
+        private void rb_expense_Click(object sender, RoutedEventArgs e)
+        {
+            rb_expense_income_check = 2;
+            tb_category.SelectedItem = "Другое";
+            tb_category.Text = "Другое";
+        }
+
+        private void rb_income_Click(object sender, RoutedEventArgs e)
+        {
+            rb_expense_income_check = 1;
+            tb_category.SelectedItem = "Другое";
+            tb_category.Text = "Другое";
         }
     }
 }
