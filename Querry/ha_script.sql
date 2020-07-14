@@ -1,17 +1,27 @@
 -- Database: homeaccountingtest
+drop table if exists homeAccounting.Entry;
+drop table if exists homeAccounting.NameCategory;
+drop table if exists homeAccounting.MainCategory;
+drop function if exists test_select;
+drop function if exists mainSelect;
+drop function if exists adding_new_date;
+drop function if exists public.namecategory_insert;
+drop schema if exists homeAccounting;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 create schema homeAccounting;
 
 create table homeAccounting.MainCategory
 (
 	id serial primary key,
-	name character varying(50) not null
+	name character varying not null
 );
 
 create table homeAccounting.NameCategory
 (
 	id serial primary key,
 	main_category int not null,
-	name character varying(50) not null,
+	name character varying not null,
 	foreign key(main_category) references homeAccounting.MainCategory(id)
 );
 
@@ -22,12 +32,13 @@ create table homeAccounting.Entry
 	name_category int not null,
 	date date default CURRENT_DATE,	
 	cost decimal default 0,
-	comment character varying(100),
+	comment character varying,
 	foreign key(main_category) references homeAccounting.MainCategory(id),
 	foreign key(name_category) references homeAccounting.NameCategory(id)
 	
 );
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 insert into homeAccounting.MainCategory(name)
 	values
 	('Доход'),('Расход');
@@ -61,7 +72,7 @@ insert into homeAccounting.Entry(main_category, name_category, date, cost, comme
 	(1, 3,'2020-06-05', 530, 'получил зп!!');
 
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --select_func_for--выподающий список
 
 create or replace function test_select
@@ -71,7 +82,7 @@ create or replace function test_select
 )
 returns table
 (
-	c_entry character varying(50),
+	c_entry character varying,
 	c_total decimal
 )
 as
@@ -96,11 +107,11 @@ create or replace function mainSelect()
 returns table
 (
 	id int,
-	"Основная категория" character varying(50),
-	Категория character varying(50),
+	"Основная категория" character varying,
+	Категория character varying,
 	Дата date,
 	Стоимость decimal,
-	Комментарий character varying(100)
+	Комментарий character varying
 )
 as
 $$
@@ -127,7 +138,7 @@ create or replace function adding_new_date
 	_name_category int,
 	_date date,	
 	_cost decimal,
-	_comment character varying(100)
+	_comment character varying
 )
 returns int as 
 $$
